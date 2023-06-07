@@ -5,7 +5,6 @@ import * as Interface from './helpers/interface';
 
 import { generateInstantiateMessage } from './helpers/constants';
 
-
 import {
     defaultRegistryTypes as defaultStargateTypes,
     SigningStargateClient,
@@ -55,14 +54,36 @@ const runAll = async(): Promise<void> => {
         }
       };
 
-      const rootMessage = Constants.generateMakeRootMessage(
+      const rootMessage = Constants.generateExecuteMessage(
         Constants.myAddress,
         "jkl14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9scsc9nr", // hard coded contract address of the very first bindings contract we deploy
         JSON.stringify(makeRootMsg),
       )
-
       const resp2 = await client.signAndBroadcast(Constants.myAddress, [rootMessage], Constants.fee);
       console.log("execute make root result:", resp2)
+
+      const postFileMsg: Interface.PostFileMsg = {
+        post_file: {
+          account: "", 
+          hashparent: "",
+          hashchild: "",
+          contents: "",
+          viewers: "",
+          editors: "",
+          trackingnumber: "",
+        }
+      };
+
+      const postFileMessage = Constants.generateExecuteMessage(
+        Constants.myAddress,
+        "jkl14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9scsc9nr", // hard coded contract address of the very first bindings contract we deploy
+        JSON.stringify(postFileMsg),
+      )
+
+      const resp3 = await client.signAndBroadcast(Constants.myAddress, [postFileMessage], Constants.fee);
+      console.log("execute make root result:", resp3)
+
+
 
 }
 
