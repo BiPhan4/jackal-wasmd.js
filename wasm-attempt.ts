@@ -1,6 +1,8 @@
 import { DirectSecp256k1HdWallet, Registry } from "@cosmjs/proto-signing";
 import { fromBase64, toHex, toUtf8 } from "@cosmjs/encoding";
 import * as Constants from './helpers/constants';
+import * as Interface from './helpers/interface';
+
 import { generateInstantiateMessage } from './helpers/constants';
 
 
@@ -44,12 +46,12 @@ const runAll = async(): Promise<void> => {
       const resp1 = await client.signAndBroadcast(Constants.myAddress, [instantiateMessage], Constants.fee);
       console.log("instantiate result:", resp1)
 
-      const makeRootMsg = {
-        "make_root": {
-          "creator": Constants.myAddress,
-          "editors": "from j1",
-          "viewers": "placeholder",
-          "trackingnumber": "placeholder"
+      const makeRootMsg: Interface.MakeRootMsg = {
+        make_root: {
+          creator: Constants.myAddress,
+          editors: "from j1",
+          viewers: "placeholder",
+          trackingnumber: "placeholder"
         }
       };
 
