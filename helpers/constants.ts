@@ -35,6 +35,15 @@ function generateInstantiateMessage(sender: string, codeId: number, label: strin
   };
 }
 
-export { generateInstantiateMessage };
+function generateMakeRootMessage(sender: string, contractAddress: string, msg: string) {
+  return {
+    typeUrl: "/cosmwasm.wasm.v1.MsgExecuteContract",
+    value: MsgExecuteContract.fromPartial({
+      sender: sender,
+      contract: contractAddress,
+      msg: toUtf8(msg),
+    }),
+  };
+}
 
-
+export { generateInstantiateMessage, generateMakeRootMessage };

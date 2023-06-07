@@ -16,6 +16,7 @@ import {
 
   const myRegistry = new Registry(defaultStargateTypes);
   myRegistry.register("/cosmwasm.wasm.v1.MsgInstantiateContract", MsgInstantiateContract); // Replace with your own type URL and Msg class
+  myRegistry.register("/cosmwasm.wasm.v1.MsgExecuteContract", MsgExecuteContract);
 
   const mnemonic = 
   "decorate bright ozone fork gallery riot bus exhaust worth way bone indoor calm squirrel merry zero scheme cotton until shop any excess stage laundry";
@@ -33,15 +34,33 @@ const runAll = async(): Promise<void> => {
         { registry: myRegistry },
       );
 
-      const rootMessage = generateInstantiateMessage(
-        "jkl1hj5fveer5cjtn4wd6wstzugjfdxzl0xpljur4u",
+      const instantiateMessage = generateInstantiateMessage(
+        Constants.myAddress,
         1,
         "none",
         "{}",
       );
 
-      const response = await client.signAndBroadcast(Constants.myAddress, [rootMessage], Constants.fee);
-      console.log("instantiate result:", response)
+      const resp1 = await client.signAndBroadcast(Constants.myAddress, [instantiateMessage], Constants.fee);
+      console.log("instantiate result:", resp1)
+
+      const makeRootMsg = {
+        "make_root": {
+          "creator": Constants.myAddress,
+          "editors": "from j1",
+          "viewers": "placeholder",
+          "trackingnumber": "placeholder"
+        }
+      };
+
+      const rootMessage = Constants.generateMakeRootMessage(
+        Constants.myAddress,
+        "jkl14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9scsc9nr", // hard coded contract address of the very first bindings contract we deploy
+        JSON.stringify(makeRootMsg),
+      )
+
+      const resp2 = await client.signAndBroadcast(Constants.myAddress, [rootMessage], Constants.fee);
+      console.log("execute make root result:", resp2)
 
 }
 
