@@ -2,6 +2,18 @@ import { DirectSecp256k1HdWallet, Registry } from "@cosmjs/proto-signing";
 import { fromBase64, toHex, toUtf8 } from "@cosmjs/encoding";
 import * as Constants from './helpers/constants';
 import * as Interface from './helpers/interface';
+import * as merkleHelpers from './utils/hash';
+
+import {
+	FileIo,
+	FolderHandler,
+	GovHandler,
+	RnsHandler,
+	StorageHandler,
+	AbciHandler,
+	WalletHandler,
+	OracleHandler
+} from "jackal.js"
 
 import { generateInstantiateMessage } from './helpers/constants';
 
@@ -62,11 +74,16 @@ const runAll = async(): Promise<void> => {
       const resp2 = await client.signAndBroadcast(Constants.myAddress, [rootMessage], Constants.fee);
       console.log("execute make root result:", resp2)
 
+      const fullMerkle = await WalletHandler.getAbitraryMerkle("s", "")
+
+      const account = await merkleHelpers.hashAndHex(Constants.myAddress)
+      const hashchild = await merkleHelpers.hashAndHex(Constants.myAddress)
+
       const postFileMsg: Interface.PostFileMsg = {
         post_file: {
-          account: "", 
-          hashparent: "",
-          hashchild: "",
+          account:  account,
+          hashparent: fullMerkle,
+          hashchild: hashchild,
           contents: "",
           viewers: "",
           editors: "",
@@ -82,8 +99,6 @@ const runAll = async(): Promise<void> => {
 
       const resp3 = await client.signAndBroadcast(Constants.myAddress, [postFileMessage], Constants.fee);
       console.log("execute make root result:", resp3)
-
-
 
 }
 
