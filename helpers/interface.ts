@@ -1,13 +1,12 @@
 export interface MakeRootMsg {
     make_root: {
-        creator: string;
         editors: string;
         viewers: string;
         trackingnumber: string;
     };
   }
-  export interface PostFileMsg {
-    post_file: {
+  export interface PostFilesMsg {
+    post_files: {
         account: string;
         hashparent: string;
         hashchild: string;

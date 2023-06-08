@@ -4,6 +4,7 @@ import * as Constants from './helpers/constants';
 import * as Interface from './helpers/interface';
 import * as merkleHelpers from './utils/hash';
 
+// Only supported for browser :(
 import {
 	FileIo,
 	FolderHandler,
@@ -57,12 +58,13 @@ const runAll = async(): Promise<void> => {
       const resp1 = await client.signAndBroadcast(Constants.myAddress, [instantiateMessage], Constants.fee);
       console.log("instantiate result:", resp1)
 
+      const editors = await merkleHelpers.makeEditorsMap("jkl1hj5fveer5cjtn4wd6wstzugjfdxzl0xpljur4u")
+
       const makeRootMsg: Interface.MakeRootMsg = {
         make_root: {
-          creator: Constants.myAddress,
-          editors: "from j1",
+          editors: editors,
           viewers: "placeholder",
-          trackingnumber: "placeholder"
+          trackingnumber: "1"
         }
       };
 
@@ -74,20 +76,22 @@ const runAll = async(): Promise<void> => {
       const resp2 = await client.signAndBroadcast(Constants.myAddress, [rootMessage], Constants.fee);
       console.log("execute make root result:", resp2)
 
-      const fullMerkle = await WalletHandler.getAbitraryMerkle("s", "")
+      const fullMerkle = await merkleHelpers.merkleMeBro("s/")
 
       const account = await merkleHelpers.hashAndHex(Constants.myAddress)
-      const hashchild = await merkleHelpers.hashAndHex(Constants.myAddress)
+      const hashchild = await merkleHelpers.hashAndHex("pepe.jpg")
 
-      const postFileMsg: Interface.PostFileMsg = {
-        post_file: {
+      console.log("account hash is", account)
+
+      const postFileMsg: Interface.PostFilesMsg = {
+        post_files: {
           account:  account,
           hashparent: fullMerkle,
           hashchild: hashchild,
-          contents: "",
-          viewers: "",
-          editors: "",
-          trackingnumber: "",
+          contents: "placeholder",
+          viewers: "placeholder",
+          editors: "placeholder",
+          trackingnumber: "placeholder",
         }
       };
 
@@ -98,7 +102,7 @@ const runAll = async(): Promise<void> => {
       )
 
       const resp3 = await client.signAndBroadcast(Constants.myAddress, [postFileMessage], Constants.fee);
-      console.log("execute make root result:", resp3)
+      console.log("execute post file result:", resp3)
 
 }
 
