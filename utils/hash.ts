@@ -28,7 +28,6 @@ export async function merkleMeBro(path: string): Promise<string> {
   return merkle;
 }
 
-
 export async function makeEditorsMap(editor: string): Promise<string> {
     const editors: { [key: string]: string } = {};
 
@@ -48,4 +47,27 @@ export async function makeEditorsMap(editor: string): Promise<string> {
     const jsonEditors = JSON.stringify(editors);
 
     return jsonEditors;
+}
+
+// An exact ts implementation of the canine-chain's MerklePath function
+export async function MerklePath(path: string): Promise<string> {
+  // If the end of the path has a slash, e.g., "hello/world/path/", splitting would create an array with an empty string at the end
+  // Removing the trailing '/' to ensure compatibility
+  const trimPath = path.replace(/\/$/, '');
+  const chunks = trimPath.split('/');
+
+  let total = '';
+
+  for (const chunk of chunks) {
+    const h = crypto.createHash('sha256');
+    h.update(chunk);
+    const b = h.digest('hex');
+    const k = total + b;
+
+    const h1 = crypto.createHash('sha256');
+    h1.update(k);
+    total = h1.digest('hex');
+  }
+
+  return total;
 }

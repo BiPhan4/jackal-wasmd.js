@@ -4,6 +4,8 @@
   "description": "Experiment with simple CosmJS concepts.",
   "main": "index.js",
   "scripts": {
+    "storage" : "ts-node storage.ts",
+    "delete-file": "ts-node delete-file.ts",
     "wasm-attempt": "ts-node wasm-attempt.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

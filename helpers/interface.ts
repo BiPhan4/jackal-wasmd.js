@@ -16,3 +16,18 @@ export interface MakeRootMsg {
         trackingnumber: string;
     };
   }
+  export interface DeleteFileMsg {
+    delete_file: {
+        hashpath: string;
+        account: string;
+    };
+  }
+
+  export interface BuyStorageMsg {
+    buy_storage: {
+        foraddress: string;
+        duration: string;
+        bytes: string;
+        paymentdenom: string;
+    };
+  }
