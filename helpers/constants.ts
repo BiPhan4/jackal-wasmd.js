@@ -34,8 +34,8 @@ function generateInstantiateMessage(sender: string, codeId: number, label: strin
     }),
   };
 }
-
-function generateMakeRootMessage(sender: string, contractAddress: string, msg: string) {
+// Execute on the contract and pass in a custom msg to affect state change to canine-chain
+function generateExecuteMessage(sender: string, contractAddress: string, msg: string) {
   return {
     typeUrl: "/cosmwasm.wasm.v1.MsgExecuteContract",
     value: MsgExecuteContract.fromPartial({
@@ -46,4 +46,4 @@ function generateMakeRootMessage(sender: string, contractAddress: string, msg: s
   };
 }
 
-export { generateInstantiateMessage, generateMakeRootMessage };
+export { generateInstantiateMessage, generateExecuteMessage };

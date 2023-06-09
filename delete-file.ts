@@ -48,61 +48,29 @@ const runAll = async(): Promise<void> => {
         { registry: myRegistry },
       );
 
-      const instantiateMessage = generateInstantiateMessage(
-        Constants.myAddress,
-        1,
-        "none",
-        "{}",
-      );
-
-      const resp1 = await client.signAndBroadcast(Constants.myAddress, [instantiateMessage], Constants.fee);
-      console.log("instantiate result:", resp1)
-
-      const editors = await merkleHelpers.makeEditorsMap("jkl1hj5fveer5cjtn4wd6wstzugjfdxzl0xpljur4u")
-
-      const makeRootMsg: Interface.MakeRootMsg = {
-        make_root: {
-          editors: editors,
-          viewers: "placeholder",
-          trackingnumber: "1"
-        }
-      };
-
-      const rootMessage = Constants.generateExecuteMessage(
-        Constants.myAddress,
-        "jkl14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9scsc9nr", // hard coded contract address of the very first bindings contract we deploy
-        JSON.stringify(makeRootMsg),
-      )
-      const resp2 = await client.signAndBroadcast(Constants.myAddress, [rootMessage], Constants.fee);
-      console.log("execute make root result:", resp2)
-
-      const fullMerkle = await merkleHelpers.merkleMeBro("s/") // merkleMeBro only works with a / in front of 's' for some reason
+      const fullMerkle = await merkleHelpers.MerklePath("s/pepe.jpg/")
 
       const account = await merkleHelpers.hashAndHex(Constants.myAddress)
-      const hashchild = await merkleHelpers.hashAndHex("pepe.jpg")
 
-      console.log("account hash is", account)
+      console.log("full merkle:", fullMerkle)
+      console.log("account:", account)
 
-      const postFileMsg: Interface.PostFilesMsg = {
-        post_files: {
-          account:  account,
-          hashparent: fullMerkle,
-          hashchild: hashchild,
-          contents: "placeholder",
-          viewers: "placeholder",
-          editors: "placeholder",
-          trackingnumber: "placeholder",
+      const deleteFileMsg: Interface.DeleteFileMsg = {
+        delete_file: {
+          hashpath: "c1be38d8ff41feafc9641d66418d71a2ab486e8c365de4cc7108f7e6c98f4758",
+          account: account,
+
         }
       };
 
-      const postFileMessage = Constants.generateExecuteMessage(
+      const deleteFileMessage = Constants.generateExecuteMessage(
         Constants.myAddress,
         "jkl14hj2tavq8fpesdwxxcu44rty3hh90vhujrvcmstl4zr3txmfvw9scsc9nr", // hard coded contract address of the very first bindings contract we deploy
-        JSON.stringify(postFileMsg),
+        JSON.stringify(deleteFileMsg),
       )
 
-      const resp3 = await client.signAndBroadcast(Constants.myAddress, [postFileMessage], Constants.fee);
-      console.log("execute post file result:", resp3)
+      const resp = await client.signAndBroadcast(Constants.myAddress, [deleteFileMessage], Constants.fee);
+      console.log("execute post file result:", resp)
 
 }
 
